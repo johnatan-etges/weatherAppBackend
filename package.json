@@ -9,11 +9,13 @@
     "test": "jest",
     "pre-commit": "lint-staged"
   },
-  "lint-staged": [
-    "standard --fix",
-    "yarn test:staged",
-    "git add ."
-  ],
+  "lint-staged": {
+    "*.js": [
+        "standard --fix",
+        "yarn test:staged",
+        "git add ."
+    ]
+  },
   "devDependencies": {
     "husky": "^7.0.1",
     "jest": "^27.0.6",
