@@ -1,6 +1,6 @@
 class WeatherRouter {
   route (httpRequest) {
-    if (!httpRequest) {
+    if (!httpRequest || !httpRequest.body) {
       return {
         statusCode: 500
       }
@@ -54,6 +54,13 @@ describe('Weather Router', () => {
   test('Should return 500 if no httpRequest is provided', () => {
     const sut = new WeatherRouter()
     const httpResponse = sut.route()
+    expect(httpResponse.statusCode).toBe(500)
+  })
+
+  test('Should return 500 if an invalid httpRequest is provided', () => {
+    const sut = new WeatherRouter()
+    const httpRequest = {}
+    const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
   })
 })
