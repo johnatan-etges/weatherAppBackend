@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test:staged": "jest",
     "prepare": "husky install",
-    "test": "jest",
+    "test": "jest --wachAll",
+    "test:staged": "jest",
     "pre-commit": "lint-staged"
   },
   "devDependencies": {
