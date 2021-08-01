@@ -4,14 +4,19 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-      "test:staged": "console.log"
+    "test:staged": "jest",
+    "prepare": "husky install",
+    "test": "jest",
+    "pre-commit": "lint-staged"
   },
   "lint-staged": [
-      "standard --fix",
-      "yarn test:staged",
-      "git add ."
+    "standard --fix",
+    "yarn test:staged",
+    "git add ."
   ],
   "devDependencies": {
+    "husky": "^7.0.1",
+    "jest": "^27.0.6",
     "lint-staged": "^11.1.1",
     "standard": "^16.0.3"
   }
