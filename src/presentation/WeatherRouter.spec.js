@@ -1,6 +1,6 @@
 class WeatherRouter {
   route (httpRequest) {
-    if (!httpRequest.body.date || !httpRequest.body.city) {
+    if (!httpRequest.body.date || !httpRequest.body.city || !httpRequest.body.limit) {
       return {
         statusCode: 400
       }
@@ -28,6 +28,18 @@ describe('Weather Router', () => {
       body: {
         date: 'any_date',
         limit: 'any_limit'
+      }
+    }
+    const httpResponse = sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+  })
+
+  test('Should return 400 if no limit is provided', () => {
+    const sut = new WeatherRouter()
+    const httpRequest = {
+      body: {
+        date: 'any_date',
+        city: 'any_city'
       }
     }
     const httpResponse = sut.route(httpRequest)
