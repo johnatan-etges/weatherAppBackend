@@ -1,6 +1,7 @@
 class WeatherRouter {
   route (httpRequest) {
-    if (!httpRequest.body.date || !httpRequest.body.city || !httpRequest.body.limit) {
+    const { date, city, limit } = httpRequest.body
+    if (!date || !city || !limit) {
       return {
         statusCode: 400
       }
