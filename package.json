@@ -5,9 +5,12 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
-    "test": "jest --wachAll",
+    "test": "jest --watchAll",
     "test:staged": "jest",
     "pre-commit": "lint-staged"
+  },
+  "standard": {
+    "env": ["jest"]
   },
   "devDependencies": {
     "husky": "^7.0.1",
