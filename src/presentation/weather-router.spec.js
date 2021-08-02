@@ -1,7 +1,7 @@
 const WeatherRouter = require('./routers/weather-router')
 
-class WeatherUseCase {
-  queryWeather (date, city, limit) {
+class WeatherUseCaseSpy {
+  fetchWeatherData (date, city, limit) {
     this.date = date
     this.city = city
     this.limit = limit
@@ -9,21 +9,17 @@ class WeatherUseCase {
 }
 
 const makeSut = () => {
-  const weatherUseCase = new WeatherUseCase()
-  const sut = new WeatherRouter(weatherUseCase)
+  const weatherUseCaseSpy = new WeatherUseCaseSpy()
+  const sut = new WeatherRouter(weatherUseCaseSpy)
   return {
     sut,
-    weatherUseCase
+    weatherUseCaseSpy
   }
 }
 
 const makeSutWithError = () => {
-  const weatherUseCase = new WeatherUseCase()
   const sut = new WeatherRouter()
-  return {
-    sut,
-    weatherUseCase
-  }
+  return sut
 }
 
 describe('Weather Router', () => {
@@ -77,7 +73,7 @@ describe('Weather Router', () => {
   })
 
   test('Should return 500 if no WeatherUseCase is provided', () => {
-    const { sut } = makeSutWithError()
+    const sut = makeSutWithError()
     const httpRequest = {
       body: {
         date: 'any_date',
@@ -89,8 +85,8 @@ describe('Weather Router', () => {
     expect(httpResponse.statusCode).toBe(500)
   })
 
-  test('Should call WeatherUseCause.queryWeather with correct parameters', () => {
-    const { sut, weatherUseCase } = makeSut()
+  test('Should call WeatherUseCause.fetchWeatherData with correct parameters', () => {
+    const { sut, weatherUseCaseSpy } = makeSut()
     const httpRequest = {
       body: {
         date: 'any_date',
@@ -99,8 +95,8 @@ describe('Weather Router', () => {
       }
     }
     sut.route(httpRequest)
-    expect(weatherUseCase.date).toEqual(httpRequest.body.date)
-    expect(weatherUseCase.city).toEqual(httpRequest.body.city)
-    expect(weatherUseCase.limit).toEqual(httpRequest.body.limit)
+    expect(weatherUseCaseSpy.date).toEqual(httpRequest.body.date)
+    expect(weatherUseCaseSpy.city).toEqual(httpRequest.body.city)
+    expect(weatherUseCaseSpy.limit).toEqual(httpRequest.body.limit)
   })
 })

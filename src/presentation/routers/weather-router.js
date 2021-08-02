@@ -24,6 +24,6 @@ module.exports = class WeatherRouter {
       return HttpResponse.badRequest('limit')
     }
 
-    this.weatherUseCase.queryWeather('any_date', 'any_city', 'any_limit')
+    this.weatherUseCase.fetchWeatherData(date, city, limit)
   }
 }
