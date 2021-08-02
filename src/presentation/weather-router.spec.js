@@ -1,3 +1,5 @@
+const HttpResponse = require('./helpers/http-response')
+
 class WeatherUseCase {
   queryWeather (date, city, limit) {
     this.date = date
@@ -13,21 +15,21 @@ class WeatherRouter {
 
   route (httpRequest) {
     if (!this.weatherUseCase) {
-      return {
-        statusCode: 500
-      }
+      return HttpResponse.serverError()
     }
 
     if (!httpRequest || !httpRequest.body) {
-      return {
-        statusCode: 500
-      }
+      return HttpResponse.serverError()
     }
     const { date, city, limit } = httpRequest.body
-    if (!date || !city || !limit) {
-      return {
-        statusCode: 400
-      }
+    if (!date) {
+      return HttpResponse.badRequest('date')
+    }
+    if (!city) {
+      return HttpResponse.badRequest('city')
+    }
+    if (!limit) {
+      return HttpResponse.badRequest('limit')
     }
 
     this.weatherUseCase.queryWeather('any_date', 'any_city', 'any_limit')
