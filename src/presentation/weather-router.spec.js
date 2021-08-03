@@ -1,5 +1,5 @@
 const WeatherRouter = require('./routers/weather-router')
-const ServerError = require('./errors/server-error')
+const { ServerError, MissingParamError } = require('./errors')
 
 class WeatherUseCaseSpy {
   fetchWeatherData (date, city, limit) {
@@ -36,6 +36,7 @@ describe('Weather Router', () => {
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new MissingParamError())
   })
 
   test('Should return 400 if no city is provided', () => {
@@ -48,6 +49,7 @@ describe('Weather Router', () => {
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new MissingParamError())
   })
 
   test('Should return 400 if no limit is provided', () => {
@@ -60,12 +62,14 @@ describe('Weather Router', () => {
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new MissingParamError())
   })
 
   test('Should return 500 if no httpRequest is provided', () => {
     const { sut } = makeSut()
     const httpResponse = sut.route()
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('Should return 500 if an invalid httpRequest is provided', () => {
@@ -73,6 +77,7 @@ describe('Weather Router', () => {
     const httpRequest = {}
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('Should return 500 if no WeatherUseCase is provided', () => {
@@ -86,6 +91,7 @@ describe('Weather Router', () => {
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('Should call WeatherUseCause.fetchWeatherData with correct parameters', () => {
@@ -114,5 +120,6 @@ describe('Weather Router', () => {
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 })
