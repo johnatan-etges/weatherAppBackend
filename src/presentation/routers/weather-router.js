@@ -5,7 +5,7 @@ module.exports = class WeatherRouter {
     this.weatherUseCase = weatherUseCase
   }
 
-  route (httpRequest) {
+  async route (httpRequest) {
     try {
       const { date, city, limit } = httpRequest.body
       if (!date) {
@@ -17,7 +17,7 @@ module.exports = class WeatherRouter {
       if (!limit) {
         return HttpResponse.badRequest('limit')
       }
-      this.weatherUseCase.fetchWeatherData(date, city, limit)
+      await this.weatherUseCase.fetchWeatherData(date, city, limit)
     } catch (error) {
       return HttpResponse.serverError()
     }

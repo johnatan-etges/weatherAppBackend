@@ -2,7 +2,7 @@ const WeatherRouter = require('./routers/weather-router')
 const { ServerError, MissingParamError } = require('./errors')
 
 class WeatherUseCaseSpy {
-  fetchWeatherData (date, city, limit) {
+  async fetchWeatherData (date, city, limit) {
     this.date = date
     this.city = city
     this.limit = limit
@@ -26,7 +26,7 @@ const makeSutWithError = () => {
 }
 
 describe('Weather Router', () => {
-  test('Should return 400 if no date is provided', () => {
+  test('Should return 400 if no date is provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
@@ -34,12 +34,12 @@ describe('Weather Router', () => {
         limit: 'any_limit'
       }
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError())
   })
 
-  test('Should return 400 if no city is provided', () => {
+  test('Should return 400 if no city is provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
@@ -47,12 +47,12 @@ describe('Weather Router', () => {
         limit: 'any_limit'
       }
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError())
   })
 
-  test('Should return 400 if no limit is provided', () => {
+  test('Should return 400 if no limit is provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
@@ -60,27 +60,27 @@ describe('Weather Router', () => {
         city: 'any_city'
       }
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError())
   })
 
-  test('Should return 500 if no httpRequest is provided', () => {
+  test('Should return 500 if no httpRequest is provided', async () => {
     const { sut } = makeSut()
-    const httpResponse = sut.route()
+    const httpResponse = await sut.route()
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
 
-  test('Should return 500 if an invalid httpRequest is provided', () => {
+  test('Should return 500 if an invalid httpRequest is provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {}
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
 
-  test('Should return 500 if no WeatherUseCase is provided', () => {
+  test('Should return 500 if no WeatherUseCase is provided', async () => {
     const sut = makeSutWithError()
     const httpRequest = {
       body: {
@@ -89,12 +89,12 @@ describe('Weather Router', () => {
         limit: 'any_limit'
       }
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
 
-  test('Should call WeatherUseCause.fetchWeatherData with correct parameters', () => {
+  test('Should call WeatherUseCause.fetchWeatherData with correct parameters', async () => {
     const { sut, weatherUseCaseSpy } = makeSut()
     const httpRequest = {
       body: {
@@ -103,13 +103,13 @@ describe('Weather Router', () => {
         limit: 'any_limit'
       }
     }
-    sut.route(httpRequest)
+    await sut.route(httpRequest)
     expect(weatherUseCaseSpy.date).toEqual(httpRequest.body.date)
     expect(weatherUseCaseSpy.city).toEqual(httpRequest.body.city)
     expect(weatherUseCaseSpy.limit).toEqual(httpRequest.body.limit)
   })
 
-  test('Should return 500 if WeatherUseCase throws', () => {
+  test('Should return 500 if WeatherUseCase throws', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
@@ -118,7 +118,7 @@ describe('Weather Router', () => {
         limit: 'any_limit'
       }
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
