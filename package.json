@@ -5,9 +5,11 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
-    "test": "jest --watchAll",
-    "test:staged": "jest",
-    "pre-commit": "lint-staged"
+    "test": "jest --silent --watch --colors --noStackTrace --passWithNoTests",
+    "test:staged": "npm test -- --findRelatedTests",
+    "test:ci": "npm test -- --coverage",
+    "pre-commit": "lint-staged",
+    "pre-push": "test:ci"
   },
   "standard": {
     "env": ["jest"]
