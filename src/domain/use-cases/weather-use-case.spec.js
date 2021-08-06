@@ -7,6 +7,9 @@ class WeatherUseCase {
     if (!city) {
       throw new MissingParamError('city')
     }
+    if (!limit) {
+      throw new MissingParamError('limit')
+    }
   }
 }
 
@@ -25,5 +28,13 @@ describe('WeatherUseCase', () => {
     const limit = 'any_limit'
     const promise = sut.fetchWeatherData(date, limit)
     expect(promise).rejects.toThrow(new MissingParamError('city'))
+  })
+
+  test('Should trhow if no limit is provided', async () => {
+    const sut = new WeatherUseCase()
+    const date = 'any_date'
+    const city = 'any_city'
+    const promise = sut.fetchWeatherData(date, city)
+    expect(promise).rejects.toThrow(new MissingParamError('limit'))
   })
 })
