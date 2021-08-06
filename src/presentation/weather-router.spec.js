@@ -1,5 +1,6 @@
 const WeatherRouter = require('./routers/weather-router')
-const { ServerError, MissingParamError } = require('./errors')
+const { ServerError } = require('./errors')
+const { MissingParamError } = require('../util/errors')
 
 class WeatherUseCaseSpy {
   async fetchWeatherData (date, city, limit) {
@@ -48,7 +49,7 @@ describe('Weather Router', () => {
     }
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError())
+    expect(httpResponse.body).toEqual(new MissingParamError('date'))
   })
 
   test('Should return 400 if no city is provided', async () => {
@@ -61,7 +62,7 @@ describe('Weather Router', () => {
     }
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError())
+    expect(httpResponse.body).toEqual(new MissingParamError('city'))
   })
 
   test('Should return 400 if no limit is provided', async () => {
@@ -74,7 +75,7 @@ describe('Weather Router', () => {
     }
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError())
+    expect(httpResponse.body).toEqual(new MissingParamError('limit'))
   })
 
   test('Should return 500 if no httpRequest is provided', async () => {
