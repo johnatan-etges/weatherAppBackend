@@ -17,7 +17,8 @@ module.exports = class WeatherRouter {
       if (!limit) {
         return HttpResponse.badRequest('limit')
       }
-      await this.weatherUseCase.fetchWeatherData(date, city, limit)
+      const response = await this.weatherUseCase.fetchWeatherData(date, city, limit)
+      return HttpResponse.ok(response)
     } catch (error) {
       return HttpResponse.serverError()
     }

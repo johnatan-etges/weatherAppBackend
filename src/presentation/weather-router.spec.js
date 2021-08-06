@@ -6,8 +6,11 @@ class WeatherUseCaseSpy {
     this.date = date
     this.city = city
     this.limit = limit
-
-    throw new ServerError()
+    if (!date || !city || !limit) {
+      throw new ServerError()
+    }
+    const result = 'result'
+    return result
   }
 }
 
@@ -23,6 +26,15 @@ const makeSut = () => {
 const makeSutWithError = () => {
   const sut = new WeatherRouter()
   return sut
+}
+
+const makeWeatherUseCaseWithError = () => {
+  class WeatherUseCaseSpy {
+    async fetchWeatherData (date, city, limit) {
+      throw new ServerError()
+    }
+  }
+  return new WeatherUseCaseSpy()
 }
 
 describe('Weather Router', () => {
@@ -110,7 +122,8 @@ describe('Weather Router', () => {
   })
 
   test('Should return 500 if WeatherUseCase throws', async () => {
-    const { sut } = makeSut()
+    const weatherUseCaseSpy = makeWeatherUseCaseWithError()
+    const sut = new WeatherRouter(weatherUseCaseSpy)
     const httpRequest = {
       body: {
         date: 'any_date',
@@ -121,5 +134,18 @@ describe('Weather Router', () => {
     const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  test('Should return 200 if WeatherUseCase returns data', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        date: 'any_date',
+        city: 'any_city',
+        limit: 'any_limit'
+      }
+    }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
   })
 })

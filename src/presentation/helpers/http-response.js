@@ -13,4 +13,11 @@ module.exports = class HttpResponse {
       body: new ServerError()
     }
   }
+
+  static ok (bodyData) {
+    return {
+      statusCode: 200,
+      body: bodyData
+    }
+  }
 }
