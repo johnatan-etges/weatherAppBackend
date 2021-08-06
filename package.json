@@ -10,7 +10,7 @@
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
     "pre-commit": "lint-staged",
-    "pre-push": "test:ci"
+    "pre-push": "npm test:ci"
   },
   "standard": {
     "env": ["jest"]
